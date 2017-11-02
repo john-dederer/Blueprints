@@ -1,0 +1,34 @@
+<Mod ID="Blueprints">
+  <Compatible>0.69b</Compatible>
+  <Button Standard="F7" ID="Save_State">
+    <Name>
+      <EN>Saves the current state of the game</EN>
+    </Name>
+    <Description>
+      <EN></EN>
+    </Description>
+  </Button>
+  <Button Standard="F4" ID="Interactive">
+    <Name>
+      <EN>Interactive</EN>
+    </Name>
+    <Description>
+      <EN>Add Item to Inventory if  enough ressources</EN>
+    </Description>
+  </Button>
+  <Button Standard="F3" ID="Recipes">
+    <Name>
+      <EN>Recipes</EN>
+    </Name>
+    <Description>
+      <EN>Show Recipe for item</EN>
+    </Description>
+  </Button>
+  <Name>
+    <EN>Use blueprints while crafting</EN>
+  </Name>
+  <Description>
+    <EN>Use blueprints while crafting</EN>
+  </Description>
+  <Version>0.93</Version>
+</Mod>
