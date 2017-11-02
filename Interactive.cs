@@ -131,7 +131,7 @@ namespace Blueprints
                             
                                 for (int i = 0; i < max; i++)
                                 {
-                                    if (CheckInventory(item._id, 1, ref dictionary, true))
+                                    if (CheckInventory(item._id, 1, ref dictionary))
                                     {
                                         RemoveItemsFromInventory(ref dictionary);
 
