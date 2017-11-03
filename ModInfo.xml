@@ -24,11 +24,19 @@
       <EN>Show Recipe for item</EN>
     </Description>
   </Button>
+  <Button Standard="F5" ID="Log_PickUp">
+    <Name>
+      <EN>Logging</EN>
+    </Name>
+    <Description>
+      <EN>Pickup</EN>
+    </Description>
+  </Button>
   <Name>
     <EN>Use blueprints while crafting</EN>
   </Name>
   <Description>
     <EN>Use blueprints while crafting</EN>
   </Description>
-  <Version>0.94</Version>
+  <Version>0.97</Version>
 </Mod>

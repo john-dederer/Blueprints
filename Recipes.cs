@@ -1,104 +1,104 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
+using ModAPI;
+using ModAPI.Attributes;
+using TheForest.Items;
+using TheForest.Items.Craft;
+using TheForest.Utils;
 using UnityEngine;
+using Input = ModAPI.Input;
 
 namespace Blueprints
 {
-    class Recipes : MonoBehaviour
+    internal class Recipes : MonoBehaviour
     {
-        public static bool bOpened = false;
-        protected Dictionary<int, TheForest.Items.Craft.Receipe> dicItemIdToReceipe;
-        protected string sInput = "Search for recipe...";
-        public static float fStamina = 0f;
-        public static float fEnergy = 0f;
+        public static bool BOpened;
+        public static float FStamina;
+        public static float FEnergy;
+        protected Dictionary<int, Receipe> DicItemIdToReceipe;
+        protected string SInput = "Search for recipe...";
 
-        [ModAPI.Attributes.ExecuteOnGameStart]
+        [ExecuteOnGameStart]
+        [SuppressMessage("ReSharper", "UnusedMember.Local")]
         private static void Init()
         {
-            GameObject GO = new GameObject("__RECIPES__");
-            GO.AddComponent<Recipes>();
+            var go = new GameObject("__RECIPES__");
+            go.AddComponent<Recipes>();
 
-            ModAPI.Log.Write("Recipes added to Scene.");
+            Log.Write("Recipes added to Scene.");
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Local")]
         private void Start()
         {
             try
             {
-                dicItemIdToReceipe = new Dictionary<int, TheForest.Items.Craft.Receipe>();
+                DicItemIdToReceipe = new Dictionary<int, Receipe>();
 
-                foreach (var recipe in TheForest.Items.Craft.ReceipeDatabase.Receipes)
+                foreach (var recipe in ReceipeDatabase.Receipes)
                 {
-                    if (dicItemIdToReceipe.ContainsKey(recipe._productItemID))
-                    {
+                    if (DicItemIdToReceipe.ContainsKey(recipe._productItemID))
                         continue;
-                    }
 
-                    dicItemIdToReceipe.Add(recipe._productItemID, recipe);
+                    DicItemIdToReceipe.Add(recipe._productItemID, recipe);
                 }
 
-                ModAPI.Log.Write("Dictionary initialized.");
+                Log.Write("Dictionary initialized.");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                ModAPI.Log.Write(e.Message);
+                Log.Write(e.Message);
             }
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Local")]
         private void OnGUI()
         {
-            if (bOpened)
-            {
-                //TheForest.Utils.LocalPlayer.Inventory.Block();
-                //TheForest.Utils.LocalPlayer.Inventory.CancelNextChargedAttack = true;
-                //TheForest.Utils.LocalPlayer.Inventory.StashEquipedWeapon(false);
+            if (!BOpened) return;
+            //TheForest.Utils.LocalPlayer.Inventory.Block();
+            //TheForest.Utils.LocalPlayer.Inventory.CancelNextChargedAttack = true;
+            //TheForest.Utils.LocalPlayer.Inventory.StashEquipedWeapon(false);
 
-                float cY = 30f;
+            var cY = 30f;
 
-                GUI.skin = ModAPI.Gui.Skin;
+            GUI.skin = Gui.Skin;
 
-                Matrix4x4 bkpMatrix = GUI.matrix;
+            var bkpMatrix = GUI.matrix;
 
-                sInput = GUI.TextField(new Rect(110, 110, 900, 30), sInput);
+            SInput = GUI.TextField(new Rect(110, 110, 900, 30), SInput);
 
-                foreach (var item in TheForest.Items.ItemDatabase.Items)
+            foreach (var item in ItemDatabase.Items)
+                if (item._name.ToUpper().Contains(SInput.ToUpper()))
                 {
-                    if (item._name.ToUpper().Contains(sInput.ToUpper()))
-                    {
-                        if (sInput.Equals(string.Empty)) { continue;  }
+                    if (SInput.Equals(string.Empty)) continue;
 
-                        bool bfound = false;
+                    var bfound = false;
 
-                        string sRecipe = GetRecipeString(item._id, ref bfound);
-                        //ModAPI.Log.Write(string.Format("Recipe found for Item: {0} => {1}", item._name, bfound));
+                    var sRecipe = GetRecipeString(item._id, ref bfound);
+                    //ModAPI.Log.Write(string.Format("Recipe found for Item: {0} => {1}", item._name, bfound));
 
-                        if (!bfound) { continue;  }
+                    if (!bfound) continue;
 
-                        GUI.TextField(new Rect(110f, 120f + cY, 800, 30f), sRecipe);
+                    GUI.TextField(new Rect(110f, 120f + cY, 800, 30f), sRecipe);
 
-                        cY += 30f;
-                    }
+                    cY += 30f;
                 }
 
-                GUI.matrix = bkpMatrix;
-            }
+            GUI.matrix = bkpMatrix;
         }
 
         private string GetRecipeString(int id, ref bool bNoEntry)
         {
             try
             {
-                string sRecipe = string.Empty; 
-
-                if (!dicItemIdToReceipe.ContainsKey(id))
+                if (!DicItemIdToReceipe.ContainsKey(id))
                 {
                     bNoEntry = true;
                     return string.Empty;
                 }
 
-                sRecipe = dicItemIdToReceipe[id]._name;
+                var sRecipe = DicItemIdToReceipe[id]._name;
                 bNoEntry = true;
                 //foreach (var ingredient in dicItemIdToReceipe[id]._ingredients)
                 //{
@@ -107,36 +107,35 @@ namespace Blueprints
 
                 return sRecipe;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                ModAPI.Log.Write(e.Message);
+                Log.Write(e.Message);
                 return string.Empty;
             }
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Local")]
         private void Update()
         {
-            if (ModAPI.Input.GetButtonDown("Recipes", "Blueprints"))
-            {
-                //TheForest.Utils.LocalPlayer.Inventory.Block();
-                //TheForest.Utils.LocalPlayer.Inventory.CancelNextChargedAttack = true;
-                
+            if (!Input.GetButtonDown("Recipes", "Blueprints")) return;
+            //TheForest.Utils.LocalPlayer.Inventory.Block();
+            //TheForest.Utils.LocalPlayer.Inventory.CancelNextChargedAttack = true;
 
-                if (bOpened)
-                {
-                    TheForest.Utils.LocalPlayer.FpCharacter.UnLockView();
-                    //TheForest.Utils.LocalPlayer.Inventory.UnBlock();
-                    TheForest.Utils.LocalPlayer.Inventory.EquipPreviousWeaponDelayed();
-                }
-                else
-                {
-                    TheForest.Utils.LocalPlayer.FpCharacter.LockView();
-                    fStamina = TheForest.Utils.LocalPlayer.Stats.Stamina;
-                    fEnergy = TheForest.Utils.LocalPlayer.Stats.Energy;
-                    TheForest.Utils.LocalPlayer.Inventory.StashEquipedWeapon(false);
-                }
-                bOpened = !bOpened;
+
+            if (BOpened)
+            {
+                LocalPlayer.FpCharacter.UnLockView();
+                //TheForest.Utils.LocalPlayer.Inventory.UnBlock();
+                LocalPlayer.Inventory.EquipPreviousWeaponDelayed();
             }
+            else
+            {
+                LocalPlayer.FpCharacter.LockView();
+                FStamina = LocalPlayer.Stats.Stamina;
+                FEnergy = LocalPlayer.Stats.Energy;
+                LocalPlayer.Inventory.StashEquipedWeapon(false);
+            }
+            BOpened = !BOpened;
         }
     }
 }

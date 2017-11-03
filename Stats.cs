@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Blueprints
+﻿namespace Blueprints
 {
-    class Stats : PlayerStats
+    internal class Stats : PlayerStats
     {
         protected override void Update()
         {
-            if (Interactive.bOpened)
+            if (Interactive.BOpened)
             {
                 //this.IsBloody = false;
                 //this.FireWarmth = true;
@@ -18,16 +13,16 @@ namespace Blueprints
                 //this.Health = 100f;
                 //this.Armor = 400;
                 //this.Fullness = 1f;
-                this.Stamina = Interactive.fStamina;
-                this.Energy = Interactive.fEnergy;
+                Stamina = Interactive.FStamina;
+                Energy = Interactive.FEnergy;
                 //this.Hunger = 0;
                 //this.Thirst = 0;
                 //this.Starvation = 0;
             }
-            else if (Recipes.bOpened)
+            else if (Recipes.BOpened)
             {
-                this.Stamina = Recipes.fStamina;
-                this.Energy = Recipes.fEnergy;
+                Stamina = Recipes.FStamina;
+                Energy = Recipes.FEnergy;
             }
 
             base.Update();
